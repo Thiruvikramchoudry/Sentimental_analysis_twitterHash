@@ -1,0 +1,25 @@
+.card{
+   margin-right: 20px;
+    margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 1240px) {
+  #barchart{
+      width: 500px;
+      height: 356px;
+      position: relative;
+      top: 40px;
+  }
+}
+@media only screen and (max-width: 1240px) {
+    .img-fluid{
+        position: relative;
+        right:17px;
+    }
+    .card{
+        margin-right: 0px;
+    }
+    .alert{
+        margin-right: 0px;
+    }
+}
