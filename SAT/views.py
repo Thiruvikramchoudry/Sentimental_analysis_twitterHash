@@ -5,6 +5,7 @@ import pandas as pd
 import re
 import matplotlib.pyplot as plt
 import wikipedia
+from . import analyse
 
 
 def index(request):
@@ -67,8 +68,6 @@ def sentiment_analysis(tweet):
 
     positive_tweet=print_positive_tweet(df)
     negative_tweet=print_negative_tweet(df)
-    bar_graph(df)
-    pie_chart(df)
     return perc,positive_tweet,negative_tweet
 
 
@@ -79,7 +78,7 @@ def sentiment_analysis(tweet):
 
 #Clean the text
 
-#Create a function to clen the tweets
+#Create a function to clean the tweets
 def cleanTxt(text):
   text=re.sub('@[A-Za-z0-9_]+','',text)#Removes mentions
   text=re.sub(r'#','',text)#Removing the '#' symbols
@@ -93,27 +92,38 @@ def getSubjectivity(text):
 
 #Create  a function to get the polarity
 def getPolarity(text):
-  return TextBlob(text).sentiment.polarity
+    return analyse.sentiment_analyse(text)
+
+    #return TextBlob(text).sentiment.polarity
 
 
 #Create a function to compute the negative ,neutral and positive analysis
 def getAnalysis(score):
-  if score<0:
-    return 'Negative'
-  elif score==0:
-    return 'Neutral'
-  else:
-    return 'positive'
+
+    if score<0:
+        return 'Negative'
+    elif score==0:
+        return 'Neutral'
+    else:
+        return 'positive'
 
 
 def wikipedia_summary(tweet):
     try:
         result = wikipedia.summary(tweet, sentences=6)
         wp_page = wikipedia.page(tweet)
-        list_img_urls = wp_page.images
+
     except:
         result = "none"
+
+    try:
+        list_img_urls = wp_page.images
+    except:
+        list_img_urls = [""]
+    if list_img_urls==[]:
         list_img_urls=[""]
+    print(list_img_urls)
+
     return result,list_img_urls[0]
 
 
@@ -170,13 +180,13 @@ def conclution_print(perc):
     conclution=""
     if 65<neutral_perc:
         cond="Neutral Tweet"
-        conclution="The Tweet is a Neutral Tweet ....Since the percentage of the neutral tweet are higher when compared to Positive and Negative Tweets...."
-    elif positive_perc>negative_perc and negative_perc<25:
+        conclution="The Tweet is a Neutral Tweet ....Since the percentage of the neutral tweets are higher when compared to Positive and Negative Tweets...."
+    elif positive_perc>negative_perc and  (positive_perc/4)*3>negative_perc:
         cond="Positive Tweet"
-        conclution="The Tweet is a Positive Tweet ....Since the percentage of the Positive tweet are higher when compared to Negative Tweets...."
+        conclution="The Tweet is a Positive Tweet ....Since the percentage of the Positive tweets are higher when compared to Negative Tweets...."
     else:
         cond="Negative Tweet"
-        conclution="The Tweet is a Negative Tweet ....Since the percentage of the Negative tweet are higher when compared to Postive Tweets...."
+        conclution="The Tweet is a Negative Tweet ....Since the percentage of the Negative tweets are higher when compared to Postive Tweets...."
 
     return cond,conclution
 

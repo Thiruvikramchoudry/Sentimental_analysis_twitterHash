@@ -3,13 +3,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Analysis Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "SAT/tweet_page_styles/css/tweet_page_css.css" %}">
 </head>
-<body style="padding-left: 20px;background:linear-gradient(to top, #000000 2%, #4681a2 100%);;">
-<div class="alert alert-info" role="alert" style="margin-top: 20px;margin-right: 20px;">
-    <h1 style="text-align: center;text-transform: uppercase;">#{{ tweet_name }}</h1>
+<body style="background:linear-gradient(to top left, #000000 2%, #4681a2 100%);padding: 0px 50px;">
+<div class="alert alert-info" role="alert" style="margin-top: 20px;margin-right: 20px;background: linear-gradient(to bottom right,#006d9a 5%,black);border: none;color: white;">
+    <div style="position: absolute;top: -12px;"><img src="{% static 'SAT/index_styles/images/bookmark.png' %}" alt=""></div>
+    <h1 style="text-align: center;text-transform: uppercase;text-shadow: 4px 3px 2px black;">#{{ tweet_name }}</h1>
 </div>
 {% if tweet_summary != "none" %}
 <div class="card" style="display: flex;" id="about">
@@ -64,12 +65,13 @@
     </div>
 </div>
 
-<div class="card" style="height: 600px;" id="barandpie">
-    <div class="card-body" style="width: 620px;height: 456px;">
-        <img src="{% static "SAT/tweet_page_styles/images/pies/img.png"  %}" alt="img"  class="img-fluid">
+<div style="height: 415px;display: flex;" id="barandpie" >
+    <div class="card-body" >
+        <canvas id="myChart1" style="width:100%;max-width:600px"></canvas>
     </div>
-    <div class="card-body" style="width: 640px;height: 456px;position: relative;left: 48%;bottom: 450px;">
-        <img src="{% static "SAT/tweet_page_styles/images/bars/img.png"  %}" alt="img"  class="img-fluid" id="barchart">
+
+    <div class="card-body" >
+        <canvas id="myChart2" style="width:100%;max-width:600px"></canvas>
     </div>
 </div>
 
@@ -82,8 +84,79 @@
         <p>{{ conclution }}</p>
     </div>
 </div>
+<div style="display: none;" id="data">
+    {{ positive }},{{ neutral }},{{ negative }}
+</div>
+
+
 
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+
+<script>
+var xValue = ["Positive", "Neutral","Negative"];
+
+let perc=document.getElementById("data").innerText;
+let yValue=perc.split(",");
+for(i=0;i<yValue.length;i++){
+    yValue[i]=parseInt(yValue[i]);
+}
+var barColor = [
+
+  "#00aba9",
+  "grey",
+    "#b91d47"
+];
+
+new Chart("myChart1", {
+  type: "doughnut",
+  data: {
+    labels: xValue,
+    datasets: [{
+      backgroundColor: barColor,
+      data: yValue
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Tweet Analysis Division(Doughnut Division)",
+    }
+  }
+});
+</script>
+
+<script>
+var xValues = ["Positive", "Neutral","Negative"];
+
+let yValues=perc.split(",");
+for(i=0;i<yValues.length;i++){
+    yValues[i]=parseInt(yValues[i]);
+}
+
+var barColors = ["#00aba9", "grey","#b91d47"];
+
+new Chart("myChart2", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Tweet Analysis Division(Bar Division)"
+    }
+  }
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
